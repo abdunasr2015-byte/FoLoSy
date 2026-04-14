@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoLoSy Pro - مصروفي</title>
+    <style>
+        :root { --bg: #121212; --card: #1e1e1e; --success: #28a745; --danger: #dc3545; --accent: #007bff; }
+        body { font-family: sans-serif; background-color: var(--bg); color: white; padding: 10px; margin: 0; text-align: center; }
+        .balance-card { background: linear-gradient(45deg, #1a2a6c, #b21f1f); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .balance-value { font-size: 32px; font-weight: bold; }
+        .input-group { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #333; }
+        input, select { width: 95%; padding: 12px; margin: 8px 0; border-radius: 8px; background: #222; color: white; border: 1px solid #444; font-size: 16px; }
+        .btn-row { display: flex; gap: 10px; margin-top: 10px; }
+        .btn { border: none; padding: 15px; border-radius: 8px; color: white; font-weight: bold; flex: 1; font-size: 16px; }
+        .mic-btn { background: #6f42c1; border-radius: 50%; width: 70px; height: 70px; margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 0 15px #6f42c1; cursor: pointer; border: none; }
+        .mic-active { animation: pulse 1.5s infinite; background: var(--danger); }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .filter-group { background: #252525; padding: 10px; border-radius: 10px; margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; }
+        .filter-group input { width: 42%; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: var(--card); border-radius: 10px; overflow: hidden; }
+        th, td { border: 1px solid #333; padding: 10px; font-size: 13px; text-align: center; }
+        .action-btn { padding: 8px; border-radius: 5px; border: none; color: white; margin: 2px; }
+        @media print { .input-group, .mic-btn, .filter-group, .action-btn, .btn-row { display: none; } body { background: white; color: black; } table { color: black; border: 1px solid black; } }
+    </style>
+</head>
+<body>
+
+    <div class="balance-card">
+        <div>إجمالي الرصيد 💰</div>
+        <div id="liveBalance" class="balance-value">0.00</div>
+    </div>
+
+    <button class="mic-btn" id="micBtn" onclick="startVoice()">🎙️</button>
+    <div id="micStatus" style="font-size: 13px; color: #aaa; margin-bottom: 15px;">اضغط للتحدث (المساعد الذكي)</div>
+
+    <div class="input-group">
+        <input type="text" id="description" placeholder="البيان (أو استعمل المايك)">
+        <input type="number" id="amount" placeholder="المبلغ">
+        <select id="type">
+            <option value="income">إيراد (+)</option>
+            <option value="expense">مصروف (-)</option>
+        </select>
+        <div class="btn-row">
+            <button id="addBtn" class="btn" style="background:var(--success);" onclick="addEntry()">إضافة</button>
+            <button class="btn" style="background:var(--accent);" onclick="window.print()">طباعة تقرير</button>
+        </div>
+    </div>
+
+    <div class="filter-group">
+        <label style="width:100%; font-size:12px;">تصفية التقارير (من / إلى):</label>
+        <input type="date" id="fromDate" onchange="updateUI()">
+        <input type="date" id="toDate" onchange="updateUI()">
+    </div>
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>البيان</th>
+                    <th>المبلغ</th>
+                    <th>إجراء</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        let transactions = JSON.parse(localStorage.getItem('rahim_pro_v5') || "[]");
+        let editIndex = -1;
+
+        function startVoice() {
+            if (navigator.vibrate) navigator.vibrate(50);
+            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!window.SpeechRecognition) {
+                alert("متصفحك لا يدعم المايك، يفضل استخدام Chrome");
+                return;
+            }
+
+            const recognition = new window.SpeechRecognition();
+            recognition.lang = 'ar-EG';
+            const btn = document.getElementById('micBtn');
+            const status = document.getElementById('micStatus');
+
+            recognition.onstart = () => {
+                btn.classList.add('mic-active');
+                status.innerText = "اسمعك... (مثلاً: استلمت 500 من مازن)";
+            };
+
+            recognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                document.getElementById('description').value = text;
+                analyzeText(text);
+                btn.classList.remove('mic-active');
+                status.innerText = "تم التحليل!";
+            };
+
+            recognition.onerror = (e) => {
+                btn.classList.remove('mic-active');
+                status.innerText = "خطأ: " + e.error;
+            };
+
+            recognition.start();
+        }
+
+        function analyzeText(text) {
+            const numbers = text.match(/\d+/);
+            if (numbers) document.getElementById('amount').value = numbers[0];
+            if (text.includes("صرفت") || text.includes("دفعت") || text.includes("مصروف")) {
+                document.getElementById('type').value = "expense";
+            } else if (text.includes("أخدت") || text.includes("جالي") || text.includes("استلمت") || text.includes("إيراد")) {
+                document.getElementById('type').value = "income";
+            }
+        }
+
+        function updateUI() {
+            const body = document.getElementById('tableBody');
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            body.innerHTML = "";
+            let currentBalance = 0;
+
+            let filtered = [...transactions];
+            if(fromDate || toDate) {
+                filtered = filtered.filter(t => {
+                    const tDate = new Date(t.fullDate).setHours(0,0,0,0);
+                    const from = fromDate ? new Date(fromDate).setHours(0,0,0,0) : -Infinity;
+                    const to = toDate ? new Date(toDate).setHours(0,0,0,0) : Infinity;
+                    return tDate >= from && tDate <= to;
+                });
+            }
+
+            filtered.forEach((t) => {
+                const amt = parseFloat(t.amount);
+                const realIndex = transactions.indexOf(t);
+                if(t.type === 'income') currentBalance += amt;
+                else currentBalance -= amt;
+
+                const row = `<tr>
+                    <td>${t.date}</td>
+                    <td>${t.desc}</td>
+                    <td style="color:${t.type==='income'?'#28a745':'#dc3545'}">${t.type==='income'?'+':'-'}${amt}</td>
+                    <td>
+                        <button class="action-btn" style="background:#ffc107; color:black;" onclick="editEntry(${realIndex})">📝</button>
+                        <button class="action-btn" style="background:var(--danger);" onclick="deleteEntry(${realIndex})">🗑️</button>
+                    </td>
+                </tr>`;
+                body.insertAdjacentHTML('afterbegin', row);
+            });
+
+            document.getElementById('liveBalance').innerText = currentBalance.toFixed(2) + " ج.م";
+            localStorage.setItem('rahim_pro_v5', JSON.stringify(transactions));
+        }
+
+        function addEntry() {
+            const desc = document.getElementById('description').value;
+            const amount = document.getElementById('amount').value;
+            const type = document.getElementById('type').value;
+            const now = new Date();
+            if(!desc || !amount) return alert("البيانات ناقصة يا رحيم");
+            const entry = {
+                desc: desc, amount: amount, type: type,
+                date: now.toLocaleDateString('ar-EG') + " " + now.toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'}),
+                fullDate: now.toISOString()
+            };
+            if(editIndex > -1) { transactions[editIndex] = entry; editIndex = -1; document.getElementById('addBtn').innerText = "إضافة"; document.getElementById('addBtn').style.background = "var(--success)"; }
+            else { transactions.push(entry); }
+            updateUI();
+            document.getElementById('description').value = ""; document.getElementById('amount').value = "";
+        }
+
+        function deleteEntry(index) {
+            if(confirm("تمسح العملية؟")) { transactions.splice(index, 1); updateUI(); }
+        }
+
+        function editEntry(index) {
+            const t = transactions[index];
+            document.getElementById('description').value = t.desc;
+            document.getElementById('amount').value = t.amount;
+            document.getElementById('type').value = t.type;
+            editIndex = index;
+            document.getElementById('addBtn').innerText = "حفظ";
+            document.getElementById('addBtn').style.background = "#ffc107";
+            window.scrollTo(0,0);
+        }
+
+        window.onload = updateUI;
+    </script>
+</body>
+</html>
