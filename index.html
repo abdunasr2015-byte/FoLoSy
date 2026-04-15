@@ -19,7 +19,7 @@
             padding: 15px; margin: 0; text-align: center; transition: 0.4s;
         }
 
-        /* شاشة القفل النظيفة */
+        /* شاشة القفل */
         #lockScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 10000; display: flex; align-items: center; justify-content: center;
@@ -72,12 +72,10 @@
         .active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* الطباعة النظيفة */
         @media print {
             #lockScreen, .btn, .mic-btn, #micStatus, .mood-selector, .settings-toggle, .settings-panel, input, select, .no-print, .filter-area { display: none !important; }
             body { background: white !important; color: black !important; }
             .glass-card { background: white !important; border: 1px solid black; box-shadow: none; color: black !important; margin-bottom: 10px; }
-            .balance-value, .mood-stats { color: black !important; }
             table { border: 1px solid black; color: black !important; }
             th, td { border: 1px solid black !important; color: black !important; }
         }
@@ -96,7 +94,7 @@
 
     <div id="appContent" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-            <button onclick="toggleSettings()" class="settings-toggle" style="background:none; border:none; font-size:26px; cursor:pointer;">⚙️</button>
+            <button onclick="toggleSettings()" style="background:none; border:none; font-size:26px; cursor:pointer;">⚙️</button>
             <h2 id="userTitle" style="color:var(--gold); margin:0;">حسابات رحيم</h2>
             <div style="width:26px"></div>
         </div>
@@ -115,7 +113,7 @@
                 <button class="btn" style="background:#000; flex:1;" onclick="setTheme('dark')">وضع الليل</button>
                 <button class="btn" style="background:#fff; color:#000; flex:1; border: 1px solid #ccc;" onclick="setTheme('light')">وضع النهار</button>
             </div>
-            <button class="btn" style="background:var(--danger); margin-top:20px;" onclick="clearAllData()">⚠️ مسح كل البيانات نهائياً</button>
+            <button class="btn" style="background:var(--danger); margin-top:20px;" onclick="clearAllData()">⚠️ مسح البيانات نهائياً</button>
         </div>
 
         <div class="glass-card">
@@ -128,7 +126,7 @@
         </div>
 
         <button class="mic-btn" id="micBtn" onclick="startVoice()">🎙️</button>
-        <div id="micStatus" style="font-size:13px; color:var(--accent); margin-bottom:15px; font-weight:bold;">اضغط واتكلم (مثال: أخدت 50 جنيه)</div>
+        <div id="micStatus" style="font-size:13px; color:var(--accent); margin-bottom:15px; font-weight:bold;">اضغط واتكلم (أخدت 50 جنيه)</div>
 
         <div class="glass-card">
             <input type="text" id="description" placeholder="البيان (اشتريت إيه؟)">
@@ -152,10 +150,8 @@
         </div>
 
         <div class="filter-area" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-            <div style="display: flex; gap: 10px; align-items: center; font-size: 13px;">
-                من: <input type="date" id="fromDate" onchange="updateUI()">
-                إلى: <input type="date" id="toDate" onchange="updateUI()">
-            </div>
+            من: <input type="date" id="fromDate" onchange="updateUI()" style="width:35%">
+            إلى: <input type="date" id="toDate" onchange="updateUI()" style="width:35%">
         </div>
 
         <div style="overflow-x:auto;">
@@ -177,12 +173,8 @@
         window.onload = () => {
             if (!savedPin) {
                 document.getElementById('lockTitle').innerText = "إنشاء كود سري 🆕";
-                document.getElementById('lockDesc').innerText = "اكتب 4 أرقام عشان نحفظهم كباسورد ليك";
-            } else {
-                document.getElementById('lockTitle').innerText = "أهلاً يا رحيم 🔒";
-                document.getElementById('lockDesc').innerText = "اكتب الكود السري بتاعك";
+                document.getElementById('lockDesc').innerText = "اكتب 4 أرقام كباسورد ليك";
             }
-            
             const n = localStorage.getItem('rahim_name');
             if(n) {
                 document.getElementById('userTitle').innerText = "حسابات " + n;
@@ -192,49 +184,40 @@
             if(t) setTheme(t);
         };
 
-        // الدخول التلقائي الذكي
         function checkPinAuto() {
             const inputField = document.getElementById('pinCode');
             const val = inputField.value;
-            const msg = document.getElementById('lockMsg');
-
             if (val.length === 4) {
                 if (!savedPin) {
                     localStorage.setItem('rahim_pin', val);
                     savedPin = val;
                     unlockApp();
                 } else {
-                    if (val === savedPin) {
-                        unlockApp();
-                    } else {
-                        msg.innerText = "الكود غلط يا بطل! جرب تاني ❌";
+                    if (val === savedPin) unlockApp();
+                    else {
+                        document.getElementById('lockMsg').innerText = "الكود غلط! ❌";
                         inputField.value = "";
                     }
                 }
-            } else {
-                msg.innerText = "";
             }
         }
 
         function unlockApp() {
-            document.getElementById('lockScreen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('appContent').style.display = 'block';
-                updateUI();
-            }, 300);
+            document.getElementById('lockScreen').style.display = 'none';
+            document.getElementById('appContent').style.display = 'block';
+            updateUI();
         }
 
-        // المايك
+        // تم تصحيح المنطق هنا يا رحيم
         function startVoice() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) return alert("متصفحك مش بيدعم المايك، جرب جوجل كروم.");
+            if (!SpeechRecognition) return alert("المتصفح لا يدعم المايك");
             
             const rec = new SpeechRecognition();
             rec.lang = 'ar-EG';
             rec.onstart = () => {
                 document.getElementById('micBtn').classList.add('mic-active');
-                document.getElementById('micStatus').innerText = "اتكلم، أنا سامعك...";
+                document.getElementById('micStatus').innerText = "أنا بسمعك...";
             };
             rec.onresult = (e) => {
                 const text = e.results[0][0].transcript;
@@ -242,18 +225,18 @@
                 const num = text.match(/\d+/); 
                 if (num) document.getElementById('amount').value = num[0];
                 
-                if (text.includes("أخدت") || text.includes("استلمت") || text.includes("إيراد") || text.includes("مصروف")) {
+                // المنطق الصحيح:
+                const incomeKeywords = ["أخدت", "استلمت", "إيراد", "جالي", "دخل"];
+                const expenseKeywords = ["دفعت", "صرفت", "مشروحات", "مصروف", "اشتريت"];
+                
+                if (incomeKeywords.some(word => text.includes(word))) {
                     document.getElementById('type').value = "income";
-                } else {
+                } else if (expenseKeywords.some(word => text.includes(word))) {
                     document.getElementById('type').value = "expense";
                 }
                 
                 document.getElementById('micBtn').classList.remove('mic-active');
-                document.getElementById('micStatus').innerText = "تم تسجيل كلامك!";
-            };
-            rec.onerror = () => {
-                document.getElementById('micBtn').classList.remove('mic-active');
-                document.getElementById('micStatus').innerText = "مسمعتش حاجة، جرب تاني.";
+                document.getElementById('micStatus').innerText = "تم التحليل!";
             };
             rec.start();
         }
@@ -292,8 +275,8 @@
                             <td style="font-size:22px">${t.mood}</td>
                             <td style="color:${t.type==='income'?'var(--success)':'var(--danger)'}; font-weight:900;">${amt}</td>
                             <td class="no-print">
-                                <button onclick="editEntry(${i})" style="border:none; background:none; cursor:pointer; font-size: 18px;">📝</button>
-                                <button onclick="deleteEntry(${i})" style="border:none; background:none; cursor:pointer; font-size: 18px;">🗑️</button>
+                                <button onclick="editEntry(${i})" style="border:none; background:none; cursor:pointer;">📝</button>
+                                <button onclick="deleteEntry(${i})" style="border:none; background:none; cursor:pointer;">🗑️</button>
                             </td>
                         </tr>
                     `);
@@ -308,21 +291,15 @@
         function addEntry() {
             const d = document.getElementById('description').value;
             const a = document.getElementById('amount').value;
-            if (!d || !a) return alert("لازم تكتب البيان والمبلغ يا رحيم!");
-            
+            if (!d || !a) return alert("دخل البيانات");
             const entry = {
                 desc: d, amount: a, type: document.getElementById('type').value,
                 mood: currentMood, date: new Date().toLocaleDateString('ar-EG'), fullDate: new Date().toISOString()
             };
-
-            if (editIndex > -1) { 
-                transactions[editIndex] = entry; editIndex = -1; 
-                document.getElementById('addBtn').innerText = "حفظ العملية"; 
-            } else { transactions.push(entry); }
-            
+            if (editIndex > -1) { transactions[editIndex] = entry; editIndex = -1; document.getElementById('addBtn').innerText = "حفظ العملية"; }
+            else { transactions.push(entry); }
             updateUI();
             document.getElementById('description').value = ""; document.getElementById('amount').value = "";
-            selectMood('😊', 'm1'); document.getElementById('type').value = "expense";
         }
 
         function editEntry(i) {
@@ -331,30 +308,26 @@
             document.getElementById('amount').value = t.amount;
             document.getElementById('type').value = t.type;
             editIndex = i;
-            document.getElementById('addBtn').innerText = "تحديث العملية المحددة";
+            document.getElementById('addBtn').innerText = "تحديث العملية";
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function deleteEntry(i) { if (confirm("متأكد إنك عايز تمسح العملية دي؟")) { transactions.splice(i, 1); updateUI(); } }
+        function deleteEntry(i) { if (confirm("حذف؟")) { transactions.splice(i, 1); updateUI(); } }
         function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); }
         function saveName() { localStorage.setItem('rahim_name', document.getElementById('userNameInput').value); location.reload(); }
         function setTheme(t) { document.body.className = t === 'light' ? 'light-mode' : ''; localStorage.setItem('rahim_theme', t); }
         
-        // الدالة الجديدة لتغيير الباسورد من الإعدادات
         function updatePin() {
             const newPin = document.getElementById('newPinInput').value;
             if(newPin.length === 4) {
                 localStorage.setItem('rahim_pin', newPin);
-                savedPin = newPin; // تحديث المتغير الحالي
-                alert("عاش يا بطل! تم تغيير الباسورد السري بنجاح ✅");
-                document.getElementById('newPinInput').value = ""; // تفريغ الخانة
-            } else {
-                alert("الباسورد لازم يكون 4 أرقام بالظبط يا رحيم!");
-            }
+                savedPin = newPin;
+                alert("تم تحديث الباسورد ✅");
+                document.getElementById('newPinInput').value = "";
+            } else alert("4 أرقام فقط");
         }
 
-        function clearAllData() { if (confirm("تحذير: ده هيمسح الباسورد وكل الحسابات نهائياً! متأكد؟")) { localStorage.clear(); location.reload(); } }
+        function clearAllData() { if (confirm("مسح كل شيء؟")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
-                         </html>
-                         
+</html>
