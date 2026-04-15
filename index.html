@@ -5,105 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoLoSy Pro - المبرمج رحيم</title>
     <style>
-        /* نظام الألوان والمؤثرات */
         :root {
-            --bg: #0a0a0c;
-            --card: rgba(255, 255, 255, 0.05);
-            --text: #ffffff;
-            --accent: #7c4dff;
-            --success: #00e676;
-            --danger: #ff5252;
-            --gold: #ffd740;
+            --bg: #0f172a; --card: rgba(255, 255, 255, 0.05);
+            --text: #ffffff; --accent: #38bdf8;
+            --success: #22c55e; --danger: #ef4444; --gold: #fbbf24;
         }
-
         body.light-mode {
-            --bg: #f0f2f5;
-            --card: rgba(255, 255, 255, 0.8);
-            --text: #1a1a1b;
-            --accent: #6200ea;
+            --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --accent: #0ea5e9;
         }
-
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            padding: 15px; margin: 0; text-align: center;
-            transition: 0.5s; overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg); color: var(--text);
+            padding: 15px; margin: 0; text-align: center; transition: 0.4s;
         }
 
-        /* شاشة القفل (3344) */
+        /* شاشة القفل */
         #lockScreen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 10000; display: flex; align-items: center; justify-content: center;
         }
         .lock-box {
-            background: var(--card); padding: 40px; border-radius: 30px;
-            backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);
+            background: var(--card); padding: 40px; border-radius: 25px;
+            backdrop-filter: blur(20px); border: 1px solid var(--accent);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 85%; max-width: 350px;
         }
         .pin-input {
-            width: 140px; letter-spacing: 15px; font-size: 35px; text-align: center;
-            padding: 10px; border-radius: 15px; border: 2px solid var(--accent);
+            width: 160px; letter-spacing: 12px; font-size: 32px; text-align: center;
+            padding: 10px; border-radius: 12px; border: 2px solid var(--accent);
             background: rgba(0,0,0,0.3); color: var(--gold); margin: 20px 0; outline: none;
         }
 
-        /* كروت الواجهة */
+        /* التصميم العام */
         .glass-card {
-            background: var(--card); backdrop-filter: blur(10px);
-            border-radius: 20px; padding: 20px; margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            background: var(--card); border-radius: 20px; padding: 20px;
+            margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
         }
-        .balance-value { font-size: 42px; font-weight: 800; color: var(--gold); text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-
-        /* إحصائيات المشاعر */
-        .mood-stats { display: flex; justify-content: space-around; font-size: 14px; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; }
-
+        .balance-value { font-size: 38px; font-weight: 800; color: var(--gold); }
+        .mood-stats { display: flex; justify-content: space-around; font-size: 13px; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+        
         input, select {
-            width: 90%; padding: 14px; margin: 8px 0; border-radius: 12px;
-            background: rgba(255,255,255,0.05); color: var(--text);
-            border: 1px solid rgba(255,255,255,0.1); font-size: 16px; outline: none;
+            width: 90%; padding: 12px; margin: 8px 0; border-radius: 10px;
+            background: rgba(0,0,0,0.2); color: var(--text); border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* اختيار الإيموجي */
-        .mood-selector { display: flex; justify-content: center; gap: 15px; margin: 10px 0; }
-        .mood-btn { 
-            font-size: 28px; cursor: pointer; padding: 10px; border-radius: 15px; 
-            background: var(--card); border: 2px solid transparent; transition: 0.3s;
-        }
-        .mood-btn.selected { border-color: var(--accent); background: rgba(124, 77, 255, 0.2); transform: scale(1.2); }
-
-        .btn {
-            border: none; padding: 16px; border-radius: 12px; color: white;
-            font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; font-size: 16px;
-        }
+        .btn { border: none; padding: 15px; border-radius: 12px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
         .btn:active { transform: scale(0.95); }
 
+        /* المايك */
         .mic-btn {
-            background: linear-gradient(45deg, var(--accent), #ff4081);
-            width: 75px; height: 75px; border-radius: 50%; margin: 10px auto;
-            display: flex; align-items: center; justify-content: center; font-size: 32px;
-            border: none; color: white; cursor: pointer; box-shadow: 0 0 20px rgba(124, 77, 255, 0.4);
+            background: linear-gradient(45deg, var(--accent), #7c4dff);
+            width: 70px; height: 70px; border-radius: 50%; margin: 10px auto;
+            display: flex; align-items: center; justify-content: center; font-size: 30px;
+            border: none; color: white; cursor: pointer; box-shadow: 0 0 15px var(--accent);
         }
-        .mic-active { animation: pulse 1s infinite; background: var(--danger); }
+        .mic-active { animation: pulse 1s infinite; background: var(--danger) !important; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(255, 82, 82, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); } }
+        .mood-selector { display: flex; justify-content: center; gap: 10px; margin: 10px 0; }
+        .mood-btn { font-size: 24px; cursor: pointer; padding: 8px; border-radius: 10px; background: rgba(255,255,255,0.05); }
+        .mood-btn.selected { background: var(--accent); transform: scale(1.1); }
 
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { padding: 12px; font-size: 13px; opacity: 0.6; text-align: center; }
-        td { padding: 15px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; text-align: center; }
 
-        .settings-panel { display: none; padding: 20px; background: var(--card); border-radius: 20px; margin-bottom: 20px; text-align: right; border: 1px solid var(--accent); }
-        .active { display: block; animation: fadeIn 0.4s; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .settings-panel { display: none; text-align: right; background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 1px solid var(--accent); }
+        .active { display: block; }
 
         @media print {
-            #lockScreen, .btn, .mic-btn, #micStatus, .mood-selector, .settings-toggle, .settings-panel, input, select, .delete-col { display: none !important; }
+            #lockScreen, .btn, .mic-btn, #micStatus, .mood-selector, .settings-toggle, .settings-panel, input, select, .no-print, .filter-area { display: none !important; }
             body { background: white !important; color: black !important; }
-            .glass-card { background: white !important; color: black !important; border: 1px solid black; box-shadow: none; }
+            .glass-card { background: white !important; border: 1px solid black; box-shadow: none; color: black !important; }
             .balance-value, .mood-stats { color: black !important; }
-            table { color: black !important; border: 1px solid black; }
+            table { border: 1px solid black; color: black !important; }
             th, td { border: 1px solid black !important; color: black !important; }
         }
     </style>
@@ -112,79 +85,69 @@
 
     <div id="lockScreen">
         <div class="lock-box">
-            <h2 style="margin-bottom: 5px;">مرحباً رحيم 🔒</h2>
-            <p style="font-size: 12px; opacity: 0.8; margin-bottom: 20px;">أدخل كود الحماية الرباعي</p>
+            <h2 id="lockTitle">تأمين FoLoSy 🔒</h2>
+            <p id="lockDesc" style="font-size: 14px; opacity: 0.8;">أدخل كود سري من 4 أرقام</p>
             <input type="password" id="pinCode" class="pin-input" maxlength="4" placeholder="****" inputmode="numeric">
-            <button class="btn" style="background: var(--accent);" onclick="checkPin()">دخول آمن</button>
-            <p id="lockMsg" style="color: var(--danger); font-size: 13px; margin-top: 15px; font-weight: bold;"></p>
+            <button id="lockBtn" class="btn" style="background: var(--accent);" onclick="handleLockAction()">دخول</button>
+            <p id="lockMsg" style="color: var(--danger); font-size: 12px; margin-top: 15px; font-weight: bold;"></p>
         </div>
     </div>
 
     <div id="appContent" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-            <button onclick="toggleSettings()" class="settings-toggle" style="background:none; border:none; font-size:26px; cursor:pointer;">⚙️</button>
-            <h2 id="userTitle" style="margin:0; font-size:18px; color: var(--gold);">FoLoSy Pro V5</h2>
+            <button onclick="toggleSettings()" style="background:none; border:none; font-size:24px; cursor:pointer;">⚙️</button>
+            <h2 id="userTitle" style="color:var(--gold); margin:0;">FoLoSy Pro V5</h2>
             <div style="width:24px"></div>
         </div>
 
         <div id="settingsPanel" class="settings-panel">
-            <h3 style="margin-top:0;">⚙️ الإعدادات</h3>
-            <label>تعديل اسمك:</label>
-            <input type="text" id="userNameInput" placeholder="رحيم" onchange="saveName()">
-            <label>تغيير الكود (4 أرقام):</label>
-            <input type="password" id="newPinInput" maxlength="4">
-            <button class="btn" style="background:var(--success); padding:10px; margin-top:5px;" onclick="updatePin()">تحديث الكود</button>
-            <div style="margin-top:15px; display:flex; gap:5px;">
-                <button class="btn" style="background:#fff; color:#000; flex:1;" onclick="setTheme('light')">نهار</button>
-                <button class="btn" style="background:#000; color:#fff; flex:1; border:1px solid #444;" onclick="setTheme('dark')">ليل</button>
-            </div>
-            <button class="btn" style="background:var(--danger); margin-top:20px;" onclick="clearAllData()">⚠️ حذف جميع البيانات</button>
+            <label>اسمك المبرمج:</label>
+            <input type="text" id="userNameInput" onchange="saveName()">
+            <button class="btn" style="background:#000; margin-top:5px;" onclick="setTheme('dark')">وضع الليل</button>
+            <button class="btn" style="background:#fff; color:#000; margin-top:5px;" onclick="setTheme('light')">وضع النهار</button>
+            <button class="btn" style="background:var(--danger); margin-top:20px;" onclick="clearAllData()">⚠️ مسح كل البيانات</button>
         </div>
 
         <div class="glass-card">
-            <div style="opacity: 0.8; font-size: 15px;">رصيدك المتاح الآن 💰</div>
+            <div style="opacity: 0.7; font-size: 14px;">إجمالي رصيدك</div>
             <div id="liveBalance" class="balance-value">0.00</div>
             <div class="mood-stats">
-                <span title="صرفته وأنت سعيد">😊 سعيد: <b id="happySpend">0</b> ج.م</span>
-                <span title="صرفته وأنت زعلان">😢 حزين: <b id="sadSpend">0</b> ج.م</span>
+                <span>😊 سعيد: <b id="happySpend">0</b></span>
+                <span>😢 حزين: <b id="sadSpend">0</b></span>
             </div>
         </div>
 
         <button class="mic-btn" id="micBtn" onclick="startVoice()">🎙️</button>
-        <div id="micStatus" style="font-size:12px; color:var(--accent); margin-bottom:15px; font-weight:bold;">تحدث (مثال: أخدت 50 جنيه من بابا)</div>
+        <div id="micStatus" style="font-size:12px; color:var(--accent); margin-bottom:15px; font-weight:bold;">اضغط واتكلم (أخدت 100 جنيه)</div>
 
         <div class="glass-card">
             <input type="text" id="description" placeholder="البيان (اشتريت إيه؟)">
-            <input type="number" id="amount" placeholder="المبلغ بالجنية">
+            <input type="number" id="amount" placeholder="المبلغ">
             <select id="type">
                 <option value="expense">مصروف (-)</option>
                 <option value="income">إيراد (+)</option>
             </select>
-            
-            <div style="font-size:13px; margin-top:10px; font-weight:bold;">حالتك النفسية العملية:</div>
             <div class="mood-selector">
-                <div class="mood-btn selected" id="mood1" onclick="selectMood('😊', 'mood1')">😊</div>
-                <div class="mood-btn" id="mood2" onclick="selectMood('😎', 'mood2')">😎</div>
-                <div class="mood-btn" id="mood3" onclick="selectMood('😢', 'mood3')">😢</div>
-                <div class="mood-btn" id="mood4" onclick="selectMood('😡', 'mood4')">😡</div>
+                <div class="mood-btn selected" id="m1" onclick="selectMood('😊', 'm1')">😊</div>
+                <div class="mood-btn" id="m2" onclick="selectMood('😎', 'm2')">😎</div>
+                <div class="mood-btn" id="m3" onclick="selectMood('😢', 'm3')">😢</div>
+                <div class="mood-btn" id="m4" onclick="selectMood('😡', 'm4')">😡</div>
             </div>
+            <div style="display: flex; gap: 10px;">
+                <button id="addBtn" class="btn" style="background:var(--success); flex: 2;" onclick="addEntry()">حفظ العملية</button>
+                <button class="btn" style="background:var(--accent); flex: 1;" onclick="window.print()">🖨️</button>
+            </div>
+        </div>
 
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button id="addBtn" class="btn" style="background:var(--success); flex:3;" onclick="addEntry()">إضافة وحفظ</button>
-                <button class="btn" style="background:var(--accent); flex:1;" onclick="window.print()">🖨️</button>
-            </div>
+        <div class="filter-area" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; margin-bottom: 15px; font-size: 12px;">
+            من: <input type="date" id="fromDate" style="width: 30%;" onchange="updateUI()">
+            إلى: <input type="date" id="toDate" style="width: 30%;" onchange="updateUI()">
         </div>
 
         <div style="overflow-x:auto;">
             <table>
                 <thead>
-                    <tr>
-                        <th>التاريخ</th>
-                        <th>البيان</th>
-                        <th>المزاج</th>
-                        <th>المبلغ</th>
-                        <th class="delete-col">حذف</th>
-                    </tr>
+                    <tr><th>التاريخ</th><th>البيان</th><th>مزاج</th><th>المبلغ</th><th class="no-print">تحكم</th></tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
@@ -192,25 +155,68 @@
     </div>
 
     <script>
-        // استخدام نفس المفتاح لضمان عدم ضياع البيانات القديمة
         let transactions = JSON.parse(localStorage.getItem('rahim_final_v1') || "[]");
-        let savedPin = localStorage.getItem('rahim_pin') || "3344";
+        let savedPin = localStorage.getItem('rahim_pin');
         let currentMood = '😊';
+        let editIndex = -1;
 
-        function checkPin() {
-            const val = document.getElementById('pinCode').value;
-            if(val === savedPin) {
-                document.getElementById('lockScreen').style.opacity = "0";
-                setTimeout(() => {
-                    document.getElementById('lockScreen').style.display = 'none';
-                    document.getElementById('appContent').style.display = 'block';
-                    updateUI();
-                }, 400);
-            } else {
-                document.getElementById('lockMsg').innerText = "الرمز السري خطأ يا رحيم! ❌";
-                document.getElementById('pinCode').value = "";
-                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        // نظام القفل
+        window.onload = () => {
+            if (!savedPin) {
+                document.getElementById('lockTitle').innerText = "كود جديد 🆕";
+                document.getElementById('lockDesc').innerText = "اختر كود من 4 أرقام لأول مرة";
             }
+            const n = localStorage.getItem('rahim_name');
+            if(n) document.getElementById('userTitle').innerText = "حسابات " + n;
+            const t = localStorage.getItem('rahim_theme');
+            if(t) setTheme(t);
+        };
+
+        function handleLockAction() {
+            const input = document.getElementById('pinCode').value;
+            if (input.length !== 4) return alert("الكود لازم 4 أرقام");
+            if (!savedPin) {
+                localStorage.setItem('rahim_pin', input);
+                savedPin = input;
+                unlock();
+            } else {
+                if (input === savedPin) unlock();
+                else alert("خطأ! ❌");
+            }
+        }
+
+        function unlock() {
+            document.getElementById('lockScreen').style.display = 'none';
+            document.getElementById('appContent').style.display = 'block';
+            updateUI();
+        }
+
+        // المايك الذكي (النسخة الكاملة)
+        function startVoice() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) return alert("المتصفح لا يدعم المايك");
+            const rec = new SpeechRecognition();
+            rec.lang = 'ar-EG';
+            rec.onstart = () => {
+                document.getElementById('micBtn').classList.add('mic-active');
+                document.getElementById('micStatus').innerText = "أنا بسمعك يا رحيم...";
+            };
+            rec.onresult = (e) => {
+                const text = e.results[0][0].transcript;
+                document.getElementById('description').value = text;
+                const num = text.match(/\d+/);
+                if (num) document.getElementById('amount').value = num[0];
+                if (text.includes("أخدت") || text.includes("استلمت") || text.includes("إيراد") || text.includes("جالي")) {
+                    document.getElementById('type').value = "income";
+                }
+                document.getElementById('micBtn').classList.remove('mic-active');
+                document.getElementById('micStatus').innerText = "تم التحليل بنجاح!";
+            };
+            rec.onerror = () => {
+                document.getElementById('micBtn').classList.remove('mic-active');
+                document.getElementById('micStatus').innerText = "حدث خطأ في المايك";
+            };
+            rec.start();
         }
 
         function selectMood(m, id) {
@@ -219,136 +225,75 @@
             document.getElementById(id).classList.add('selected');
         }
 
-        function startVoice() {
-            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!window.SpeechRecognition) return alert("المتصفح لا يدعم المايك");
-            
-            const rec = new window.SpeechRecognition();
-            rec.lang = 'ar-EG';
-            rec.onstart = () => {
-                document.getElementById('micBtn').classList.add('mic-active');
-                document.getElementById('micStatus').innerText = "أنا بسمعك...";
-            };
-            rec.onresult = (e) => {
-                const text = e.results[0][0].transcript;
-                document.getElementById('description').value = text;
-                const n = text.match(/\d+/);
-                if(n) document.getElementById('amount').value = n[0];
-                
-                if(text.includes("أخدت") || text.includes("استلمت") || text.includes("إيراد")) {
-                    document.getElementById('type').value = "income";
-                }
-                
-                document.getElementById('micBtn').classList.remove('mic-active');
-                document.getElementById('micStatus').innerText = "تم التحليل!";
-            };
-            rec.onerror = () => {
-                document.getElementById('micBtn').classList.remove('mic-active');
-                document.getElementById('micStatus').innerText = "حدث خطأ، حاول تاني";
-            };
-            rec.start();
-        }
-
         function updateUI() {
             const body = document.getElementById('tableBody');
+            const from = document.getElementById('fromDate').value;
+            const to = document.getElementById('toDate').value;
             body.innerHTML = "";
             let balance = 0, happy = 0, sad = 0;
 
             transactions.forEach((t, i) => {
-                const a = parseFloat(t.amount);
-                if(t.type === 'income') {
-                    balance += a; 
-                } else {
-                    balance -= a;
-                    // حساب إحصائيات المشاعر عند الصرف فقط
-                    if(t.mood === '😊' || t.mood === '😎') happy += a;
-                    else if(t.mood === '😢' || t.mood === '😡') sad += a;
+                const tDate = new Date(t.fullDate).setHours(0,0,0,0);
+                const fDate = from ? new Date(from).setHours(0,0,0,0) : -Infinity;
+                const oDate = to ? new Date(to).setHours(0,0,0,0) : Infinity;
+
+                if (tDate >= fDate && tDate <= oDate) {
+                    const amt = parseFloat(t.amount);
+                    if (t.type === 'income') balance += amt;
+                    else {
+                        balance -= amt;
+                        if (t.mood === '😊' || t.mood === '😎') happy += amt; else sad += amt;
+                    }
+
+                    body.insertAdjacentHTML('afterbegin', `
+                        <tr>
+                            <td>${t.date}</td>
+                            <td style="font-weight:bold">${t.desc}</td>
+                            <td style="font-size:20px">${t.mood}</td>
+                            <td style="color:${t.type==='income'?'var(--success)':'var(--danger)'}; font-weight:bold;">${amt}</td>
+                            <td class="no-print">
+                                <button onclick="editEntry(${i})" style="border:none; background:none; cursor:pointer;">📝</button>
+                                <button onclick="deleteEntry(${i})" style="border:none; background:none; cursor:pointer;">🗑️</button>
+                            </td>
+                        </tr>
+                    `);
                 }
-
-                body.insertAdjacentHTML('afterbegin', `
-                    <tr>
-                        <td style="font-size:11px">${t.date}</td>
-                        <td style="font-weight:bold">${t.desc}</td>
-                        <td style="font-size:22px">${t.mood}</td>
-                        <td style="color:${t.type==='income'?'var(--success)':'var(--danger)'}; font-weight:800;">
-                            ${t.type==='income'?'+':'-'}${a}
-                        </td>
-                        <td class="delete-col">
-                            <button onclick="deleteEntry(${i})" style="border:none; background:none; cursor:pointer; font-size:18px;">🗑️</button>
-                        </td>
-                    </tr>
-                `);
             });
-
             document.getElementById('liveBalance').innerText = balance.toFixed(2) + " ج.م";
-            document.getElementById('happySpend').innerText = happy.toFixed(0);
-            document.getElementById('sadSpend').innerText = sad.toFixed(0);
+            document.getElementById('happySpend').innerText = happy;
+            document.getElementById('sadSpend').innerText = sad;
             localStorage.setItem('rahim_final_v1', JSON.stringify(transactions));
         }
 
         function addEntry() {
             const d = document.getElementById('description').value;
             const a = document.getElementById('amount').value;
-            if(!d || !a) return alert("من فضلك دخل البيانات كاملة يا رحيم");
-            
+            if (!d || !a) return alert("دخل البيانات");
             const entry = {
                 desc: d, amount: a, type: document.getElementById('type').value,
-                mood: currentMood, date: new Date().toLocaleDateString('ar-EG')
+                mood: currentMood, date: new Date().toLocaleDateString('ar-EG'), fullDate: new Date().toISOString()
             };
-
-            transactions.push(entry);
+            if (editIndex > -1) { transactions[editIndex] = entry; editIndex = -1; document.getElementById('addBtn').innerText = "حفظ"; }
+            else { transactions.push(entry); }
             updateUI();
-            
-            // إعادة تصفير الخانات
-            document.getElementById('description').value = "";
-            document.getElementById('amount').value = "";
-            window.scrollTo(0, document.body.scrollHeight);
+            document.getElementById('description').value = ""; document.getElementById('amount').value = "";
         }
 
-        function deleteEntry(i) {
-            if(confirm("هل أنت متأكد من حذف هذه العملية؟")) {
-                transactions.splice(i, 1);
-                updateUI();
-            }
+        function editEntry(i) {
+            const t = transactions[i];
+            document.getElementById('description').value = t.desc;
+            document.getElementById('amount').value = t.amount;
+            document.getElementById('type').value = t.type;
+            editIndex = i;
+            document.getElementById('addBtn').innerText = "تحديث العملية";
+            window.scrollTo(0, 0);
         }
 
+        function deleteEntry(i) { if (confirm("حذف؟")) { transactions.splice(i, 1); updateUI(); } }
         function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); }
-        
-        function saveName() {
-            const name = document.getElementById('userNameInput').value;
-            localStorage.setItem('rahim_name', name);
-            document.getElementById('userTitle').innerText = "حسابات " + name;
-        }
-
-        function setTheme(t) {
-            document.body.className = t === 'light' ? 'light-mode' : '';
-            localStorage.setItem('rahim_theme', t);
-        }
-
-        function updatePin() { 
-            const p = document.getElementById('newPinInput').value;
-            if(p.length === 4) {
-                localStorage.setItem('rahim_pin', p);
-                alert("تم تحديث الكود السري بنجاح ✅");
-                location.reload();
-            } else { alert("الكود لازم يكون 4 أرقام"); }
-        }
-
-        function clearAllData() {
-            if(confirm("تحذير: ستمسح كل الحسابات نهائياً! هل أنت متأكد؟")) {
-                transactions = [];
-                updateUI();
-                toggleSettings();
-            }
-        }
-
-        // تحميل الإعدادات عند الفتح
-        window.onload = () => {
-            const n = localStorage.getItem('rahim_name');
-            if(n) { document.getElementById('userTitle').innerText = "حسابات " + n; document.getElementById('userNameInput').value = n; }
-            const t = localStorage.getItem('rahim_theme');
-            if(t) setTheme(t);
-        };
+        function saveName() { localStorage.setItem('rahim_name', document.getElementById('userNameInput').value); location.reload(); }
+        function setTheme(t) { document.body.className = t === 'light' ? 'light-mode' : ''; localStorage.setItem('rahim_theme', t); }
+        function clearAllData() { if (confirm("فورمات كامل؟")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>
