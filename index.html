@@ -147,7 +147,19 @@
                 color: black !important; 
                 font-weight: bold !important;
             }        
-    </style>
+
+            .positive-note {
+    background: rgba(212, 175, 55, 0.1);
+    border-right: 5px solid var(--accent);
+    padding: 10px;
+    margin: 15px 0;
+    font-size: 13px;
+    color: var(--accent);
+    font-style: italic;
+    border-radius: 5px;
+    text-align: right;
+            }
+            </style>
 </head>
 <body id="mainBody" class="theme-gold">
 
@@ -224,6 +236,10 @@
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
+   <div id="quoteArea" class="positive-note no-print">
+    ✨ نصيحة اليوم: "اللي يتدخر النهاردة، يرتاح بكرة يا بطل!"
+</div>
+
     </div>
 
     <script>
@@ -403,6 +419,15 @@
             document.getElementById('langSelect').value = currentLang;
             applyLanguage();
         };
+   const quotes = [
+    "✨ نصيحة اليوم: وفر 10% من مصروفك وهتشوف الفرق!",
+    "🚀 يا صديقي، المحاسب الشاطر هو اللي عينه على الصافي دايماً.",
+    "💰 تذكر: القرش الأبيض ينفع في اليوم الأسود!",
+    "🏆 استمر.. تنظيمك لفلوسك هو أول خطوة للنجاح.",
+    "🌟 فكر مرتين قبل ما تشتري حاجة مش محتاجها دلوقتي."
+];
+document.getElementById('quoteArea').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+        
     </script>
 </body>
 </html>
