@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تسجيل سريع</title>
+    <style>
+        body { background: #000; color: #d4af37; text-align: center; font-family: sans-serif; padding-top: 50px; }
+        .mic { width: 100px; height: 100px; border-radius: 50%; background: #d4af37; border: none; font-size: 50px; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+    <h3>جاري الاستماع...</h3>
+    <button class="mic">🎙️</button>
+    <p id="status">قول العملية فوراً (مثلاً: صرفت 50 جنيه)</p>
+
+    <script>
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'ar-EG';
+        
+        recognition.onresult = (event) => {
+            const text = event.results[0][0].transcript;
+            const amt = text.match(/\d+/);
+            if (amt) {
+                // هنجيب البيانات القديمة ونضيف عليها
+                let data = JSON.parse(localStorage.getItem('rahim_final_db') || "[]");
+                let type = (text.includes("جالي") || text.includes("أخدت")) ? "income" : "expense";
+                data.push({
+                    desc: text,
+                    amount: amt[0],
+                    type: type,
+                    date: new Date().toLocaleDateString('ar-EG')
+                });
+                localStorage.setItem('rahim_final_db', JSON.stringify(data));
+                alert("✅ تم حفظ: " + text);
+                window.close(); // يقفل الصفحة بعد ما يخلص
+            }
+        };
+
+        recognition.onend = () => { setTimeout(() => window.close(), 1000); };
+        window.onload = () => recognition.start();
+    </script>
+</body>
+</html>
