@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoLoSy Mega Ultimate - رحيم</title>
+    <title>FoLoSy Gold - النسخة المفتوحة</title>
     <style>
         :root {
             --bg: #000; --card: #111; --text: #fff; --accent: #d4af37;
@@ -11,7 +11,7 @@
             --success: #28a745; --danger: #dc3545;
         }
 
-        /* الثيمات المتعددة */
+        /* الثيمات */
         body.theme-gold { --bg: #000; --card: #111; --text: #fff; --accent: #d4af37; }
         body.theme-green { --bg: #064e3b; --card: #065f46; --text: #fff; --accent: #34d399; }
         body.theme-pink { --bg: #fff1f2; --card: #ffffff; --text: #881337; --accent: #fb7185; }
@@ -29,20 +29,19 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* شاشة القفل الفخمة */
-        #lockScreen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 10000; display: flex; align-items: center; justify-content: center; flex-direction: column;
-        }
-        .lock-box { background: var(--card); border: 2px solid var(--accent); border-radius: 25px; padding: 30px; width: 280px; }
-
-        /* الرصيد الصافي */
         .balance-value { 
             font-size: 50px; font-weight: 900; margin: 10px 0; 
             background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         body.theme-green .balance-value, body.theme-pink .balance-value, body.theme-blue .balance-value {
             -webkit-text-fill-color: var(--accent);
+        }
+
+        .positive-note {
+            background: rgba(212, 175, 55, 0.1);
+            border-right: 5px solid var(--accent);
+            padding: 10px; margin: 15px 0; font-size: 13px;
+            color: var(--accent); font-style: italic; border-radius: 5px; text-align: right;
         }
 
         input, select {
@@ -58,7 +57,6 @@
             background: var(--accent); color: var(--bg);
         }
 
-        /* المايك الذكي */
         .mic-btn {
             background: var(--accent); width: 75px; height: 75px; border-radius: 50%; 
             margin: 10px auto; display: flex; align-items: center; justify-content: center; font-size: 35px;
@@ -67,7 +65,6 @@
         .mic-active { background: var(--danger) !important; animation: pulse 1s infinite; color: white; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* الجدول والتحكم */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; border-bottom: 1px solid rgba(212,175,55,0.2); font-size: 14px; }
 
@@ -75,45 +72,52 @@
         .active { display: block; animation: slideDown 0.3s; }
         @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* دعم الإنجليزية */
-        .ltr { direction: ltr; text-align: left; }
-
         /* الطباعة */
         @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; color: black !important; }
-            .glass-card { border: 1px solid #000 !important; box-shadow: none !important; }
-            .balance-value { -webkit-text-fill-color: black !important; }
+            .no-print, #quickVoiceBtn, #helpModal { display: none !important; }
+            body { background: white !important; color: black !important; font-family: 'Arial', sans-serif; padding: 0; margin: 0; }
+            .glass-card { background: white !important; border: 2px solid black !important; color: black !important; box-shadow: none !important; border-radius: 10px !important; padding: 15px !important; }
+            .balance-value { -webkit-text-fill-color: black !important; color: black !important; font-size: 35pt !important; font-weight: bold !important; text-align: center !important; display: block !important; }
+            table { width: 100% !important; border-collapse: collapse !important; margin-top: 20px !important; }
+            th { background-color: #eeeeee !important; border: 1px solid black !important; color: black !important; padding: 10px !important; }
+            td { border: 1px solid #cccccc !important; color: black !important; padding: 10px !important; text-align: center !important; }
         }
     </style>
 </head>
 <body id="mainBody" class="theme-gold">
 
-    <div id="lockScreen">
-        <div class="lock-box">
-            <h2 id="l_lockTitle" style="color:var(--accent)">FoLoSy Secure 🔒</h2>
-            <input type="password" id="pinCode" maxlength="4" placeholder="****" inputmode="numeric" oninput="checkPinAuto()" style="text-align: center; letter-spacing: 15px; font-size: 30px;">
-            <p id="errorMsg" style="color:var(--danger); font-size:12px; height:20px;"></p>
-            <button onclick="emergencyReset()" style="background:none; border:none; color:gray; font-size:11px; margin-top:20px; cursor:pointer; text-decoration:underline;">نسيت الباسورد؟ (تصفير البرنامج)</button>
+    <div id="helpModal" class="no-print" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:20000; align-items:center; justify-content:center;">
+        <div class="glass-card" style="width:85%; max-height:80%; overflow-y:auto; border-color:var(--accent); text-align:right;">
+            <h2 style="color:var(--accent); text-align:center;">طريقة الاستخدام 🚀</h2>
+            <ul style="line-height:1.8; font-size:14px; padding-right:20px;">
+                <li>🎙️ <b>المايك الذكي:</b> دوس على المايك وقول "صرفت 50 جنيه" أو "جالي 100 جنيه".</li>
+                <li>📝 <b>تعديل/حذف:</b> تقدر تعدل أي عملية من علامة (📝) أو تمسحها من (✕).</li>
+                <li>⚙️ <b>الإعدادات:</b> غير اللغة أو الثيم من الترس فوق.</li>
+                <li>🖨️ <b>التقارير:</b> زرار الطباعة بيعملك تقرير رسمي أبيض وأسود شيك جداً.</li>
+            </ul>
+            <button class="btn-gold" onclick="closeHelp()">فهمت، ابدأ الآن!</button>
         </div>
     </div>
 
-    <div id="appContent" style="display: none;">
+    <button id="quickVoiceBtn" class="no-print" onclick="startVoice()" style="position:fixed; bottom:20px; right:20px; width:65px; height:65px; border-radius:50%; background:var(--accent); border:3px solid #000; font-size:30px; cursor:pointer; box-shadow:0 0 15px rgba(212,175,55,0.5); z-index:999;">🎙️</button>
+
+    <div id="appContent">
         <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-            <button onclick="toggleSettings()" style="background:none; border:none; font-size:30px; cursor:pointer;">⚙️</button>
-            <h2 id="l_mainTitle" style="margin:0; color:var(--accent); font-weight:900;">FoLoSy</h2>
-            <button onclick="window.print()" style="background:none; border:none; font-size:30px; cursor:pointer;">🖨️</button>
+            <div>
+                <button onclick="toggleSettings()" style="background:none; border:none; font-size:28px; cursor:pointer;">⚙️</button>
+                <button onclick="showHelp()" style="background:none; border:none; font-size:28px; cursor:pointer; margin-right:10px;">❓</button>
+            </div>
+            <h2 id="l_mainTitle" style="margin:0; color:var(--accent); font-weight:900;">FoLoSy Gold</h2>
+            <button onclick="window.print()" style="background:none; border:none; font-size:28px; cursor:pointer;">🖨️</button>
         </div>
 
         <div id="settingsPanel" class="settings-panel no-print">
             <h3 id="l_settings">الإعدادات</h3>
-            
             <label id="l_langLabel">اللغة / Language:</label>
             <select id="langSelect" onchange="changeLanguage()">
                 <option value="ar">العربية (رحيم)</option>
                 <option value="en">English (Pro)</option>
             </select>
-
             <label style="display:block; margin-top:15px;" id="l_themeLabel">المظهر / Theme:</label>
             <select id="themeSelect" onchange="changeTheme()">
                 <option value="theme-gold">فخامة الدهبي (Black Gold)</option>
@@ -121,10 +125,7 @@
                 <option value="theme-pink">اللون الوردي (Pinky)</option>
                 <option value="theme-blue">الأزرق الهادئ (Blue Ice)</option>
             </select>
-
-            <label style="display:block; margin-top:15px;">تغيير كود القفل:</label>
-            <input type="number" id="newPinInput" placeholder="4 أرقام جديدة">
-            <button class="btn-gold" onclick="updatePin()" style="margin-top:10px;">حفظ الكود الجديد</button>
+            <button class="btn-gold" onclick="emergencyReset()" style="margin-top:20px; background:var(--danger); color:white;">مسح كل البيانات (تصفير)</button>
         </div>
 
         <div class="glass-card">
@@ -136,10 +137,10 @@
             </div>
         </div>
 
+        <div id="quoteArea" class="positive-note no-print">جاري تحميل النصيحة...</div>
+
         <div class="no-print">
             <div class="mic-btn" id="micBtn" onclick="startVoice()">🎙️</div>
-            <div id="l_micHint" style="font-size:11px; color:var(--accent); margin-bottom:15px;">اضغط واتكلم لإضافة عملية</div>
-
             <div class="glass-card">
                 <input type="text" id="description" placeholder="البيان..">
                 <input type="number" id="amount" placeholder="المبلغ..">
@@ -165,63 +166,40 @@
     </div>
 
     <script>
-        let transactions = JSON.parse(localStorage.getItem('rahim_final_db') || "[]");
-        let savedPin = localStorage.getItem('rahim_final_pin') || "1234";
+        let transactions = JSON.parse(localStorage.getItem('rahim_open_db') || "[]");
         let currentLang = localStorage.getItem('rahim_final_lang') || 'ar';
-        let currentTheme = localStorage.getItem('rahim_final_theme') || 'theme-gold';
         let editIndex = -1;
+
+        const quotes = [
+            "✨ نصيحة اليوم: وفر 10% من مصروفك وهتشوف الفرق!",
+            "🚀 يا بطل، المحاسب الشاطر هو اللي عينه على الصافي دايماً.",
+            "💰 تذكر: القرش الأبيض ينفع في اليوم الأسود!",
+            "🏆 استمر.. تنظيمك لفلوسك هو أول خطوة للنجاح.",
+            "🌟 فكر مرتين قبل ما تشتري حاجة مش محتاجها دلوقتي."
+        ];
 
         const i18n = {
             ar: {
-                lockTitle: "خزنة رحيم 🔒", mainTitle: "FoLoSy Gold", settings: "الإعدادات ⚙️",
-                langLabel: "اللغة:", themeLabel: "المظهر:", balanceLabel: "الرصيد الصافي المتوفر",
-                micHint: "جرب تقول: 'جالي 100 جنيه عيدية'", optExp: "صرف (-)", optInc: "دخل (+)", 
-                addBtn: "حفظ العملية", descPh: "عملت إيه بالفلوس؟", amtPh: "المبلغ كام؟",
-                incWords: ["جالي", "أخدت", "كسبت", "إيداع", "هدية", "استلمت"],
-                expWords: ["صرفت", "دفعت", "اشتريت", "خرجت", "خسرت"]
+                mainTitle: "FoLoSy Gold", settings: "الإعدادات ⚙️", langLabel: "اللغة:", themeLabel: "المظهر:", balanceLabel: "الرصيد الصافي المتوفر",
+                optExp: "صرف (-)", optInc: "دخل (+)", addBtn: "حفظ العملية", descPh: "عملت إيه بالفلوس؟", amtPh: "المبلغ كام؟",
+                incWords: ["جالي", "أخدت", "كسبت", "إيداع", "هدية", "استلمت", "قبضت"],
+                expWords: ["صرفت", "دفعت", "اشتريت", "خرجت", "خسرت", "جبت"]
             },
             en: {
-                lockTitle: "Rahim's Vault 🔒", mainTitle: "FoLoSy Pro", settings: "Settings ⚙️",
-                langLabel: "Language:", themeLabel: "Theme:", balanceLabel: "Net Balance",
-                micHint: "Say: 'I spent 50 dollars'", optExp: "Expense (-)", optInc: "Income (+)", 
-                addBtn: "Save Transaction", descPh: "Description", amtPh: "Amount",
+                mainTitle: "FoLoSy Pro", settings: "Settings ⚙️", langLabel: "Language:", themeLabel: "Theme:", balanceLabel: "Net Balance",
+                optExp: "Expense (-)", optInc: "Income (+)", addBtn: "Save Transaction", descPh: "Description", amtPh: "Amount",
                 incWords: ["got", "received", "earned", "income", "gift"],
                 expWords: ["spent", "paid", "bought", "lost"]
             }
         };
 
-        // نظام القفل
-        function checkPinAuto() {
-            const val = document.getElementById('pinCode').value;
-            if (val === savedPin) { unlockApp(); }
-            else if (val.length === 4) {
-                document.getElementById('errorMsg').innerText = "الكود غلط!";
-                document.getElementById('pinCode').value = "";
-            }
-        }
+        function showHelp() { document.getElementById('helpModal').style.display = 'flex'; }
+        function closeHelp() { document.getElementById('helpModal').style.display = 'none'; localStorage.setItem('rahim_saw_help_open', 'true'); }
 
-        function unlockApp() {
-            document.getElementById('lockScreen').style.display = 'none';
-            document.getElementById('appContent').style.display = 'block';
-            updateUI();
-        }
-
-        // تحديث الباسورد
-        function updatePin() {
-            const p = document.getElementById('newPinInput').value;
-            if(p.length === 4) {
-                localStorage.setItem('rahim_final_pin', p);
-                savedPin = p;
-                alert("تم تغيير الباسورد بنجاح!");
-                toggleSettings();
-            } else { alert("لازم 4 أرقام!"); }
-        }
-
-        // الثيمات واللغات
         function changeTheme() {
-            currentTheme = document.getElementById('themeSelect').value;
-            document.body.className = currentTheme;
-            localStorage.setItem('rahim_final_theme', currentTheme);
+            let selectedTheme = document.getElementById('themeSelect').value;
+            document.body.className = selectedTheme;
+            localStorage.setItem('rahim_final_theme', selectedTheme);
         }
 
         function changeLanguage() {
@@ -233,17 +211,12 @@
         function applyLanguage() {
             const t = i18n[currentLang];
             const isAr = currentLang === 'ar';
-            document.documentElement.lang = currentLang;
             document.documentElement.dir = isAr ? 'rtl' : 'ltr';
-            document.getElementById('appContent').className = isAr ? '' : 'ltr';
-
-            document.getElementById('l_lockTitle').innerText = t.lockTitle;
             document.getElementById('l_mainTitle').innerText = t.mainTitle;
             document.getElementById('l_settings').innerText = t.settings;
             document.getElementById('l_langLabel').innerText = t.langLabel;
             document.getElementById('l_themeLabel').innerText = t.themeLabel;
             document.getElementById('l_balanceLabel').innerText = t.balanceLabel;
-            document.getElementById('l_micHint').innerText = t.micHint;
             document.getElementById('l_optExp').innerText = t.optExp;
             document.getElementById('l_optInc').innerText = t.optInc;
             document.getElementById('l_addBtn').innerText = (editIndex > -1) ? (isAr ? "تحديث الآن" : "Update Now") : t.addBtn;
@@ -252,13 +225,12 @@
             updateUI();
         }
 
-        // المايك الذكي
         function startVoice() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if(!SpeechRecognition) return alert("المتصفح لا يدعم المايك");
             const rec = new SpeechRecognition();
             rec.lang = currentLang === 'ar' ? 'ar-EG' : 'en-US';
-            rec.onstart = () => document.getElementById('micBtn').classList.add('mic-active');
+            rec.onstart = () => { document.getElementById('micBtn').classList.add('mic-active'); document.getElementById('quickVoiceBtn').classList.add('mic-active'); };
             rec.onresult = (e) => {
                 const text = e.results[0][0].transcript.toLowerCase();
                 document.getElementById('description').value = text;
@@ -267,27 +239,20 @@
                 if (t.incWords.some(w => text.includes(w))) document.getElementById('type').value = "income";
                 else document.getElementById('type').value = "expense";
                 document.getElementById('micBtn').classList.remove('mic-active');
+                document.getElementById('quickVoiceBtn').classList.remove('mic-active');
             };
-            rec.onerror = () => document.getElementById('micBtn').classList.remove('mic-active');
+            rec.onerror = () => { document.getElementById('micBtn').classList.remove('mic-active'); document.getElementById('quickVoiceBtn').classList.remove('mic-active'); };
             rec.start();
         }
 
-        // إضافة وتعديل وحذف
         function addEntry() {
             const d = document.getElementById('description').value, a = document.getElementById('amount').value, ty = document.getElementById('type').value;
             if (!d || !a) return;
             const entry = { desc: d, amount: a, type: ty, date: new Date().toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US') };
-            
-            if(editIndex > -1) {
-                transactions[editIndex] = entry;
-                editIndex = -1;
-            } else {
-                transactions.push(entry);
-            }
-            
+            if(editIndex > -1) { transactions[editIndex] = entry; editIndex = -1; } 
+            else { transactions.push(entry); }
             document.getElementById('description').value = ""; document.getElementById('amount').value = "";
-            applyLanguage();
-            updateUI();
+            applyLanguage(); updateUI();
         }
 
         function editItem(i) {
@@ -301,10 +266,7 @@
         }
 
         function deleteItem(i) {
-            if(confirm(currentLang === 'ar' ? "عايز تمسح العملية دي؟" : "Delete this?")) {
-                transactions.splice(i, 1);
-                updateUI();
-            }
+            if(confirm(currentLang === 'ar' ? "عايز تمسح العملية دي؟" : "Delete this?")) { transactions.splice(i, 1); updateUI(); }
         }
 
         function updateUI() {
@@ -329,19 +291,21 @@
             document.getElementById('liveBalance').innerText = balance.toFixed(2);
             document.getElementById('totalIncome').innerText = incSum.toFixed(2);
             document.getElementById('totalExpenses').innerText = expSum.toFixed(2);
-            localStorage.setItem('rahim_final_db', JSON.stringify(transactions));
+            localStorage.setItem('rahim_open_db', JSON.stringify(transactions));
         }
 
         function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); }
-        function emergencyReset() { if(confirm("تحذير: هتمسح كل حاجة وهترجع الباسورد 1234. موافق؟")) { localStorage.clear(); location.reload(); } }
+        function emergencyReset() { if(confirm("هتمسح كل الحسابات؟")) { localStorage.clear(); location.reload(); } }
 
         window.onload = () => {
-            document.body.className = currentTheme;
-            document.getElementById('themeSelect').value = currentTheme;
-            document.getElementById('langSelect').value = currentLang;
+            let savedTheme = localStorage.getItem('rahim_final_theme') || 'theme-gold';
+            document.body.className = savedTheme;
+            document.getElementById('themeSelect').value = savedTheme;
+            document.getElementById('quoteArea').innerText = quotes[Math.floor(Math.random() * quotes.length)];
             applyLanguage();
+            if (!localStorage.getItem('rahim_saw_help_open')) { showHelp(); }
         };
     </script>
 </body>
-                    </html>
+    </html>
     
