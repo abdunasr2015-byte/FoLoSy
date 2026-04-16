@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
+    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoLoSy Mega Ultimate - رحيم</title>
-    <style>
+    <title>FoLoSy Mega Ultimate - </title>
+   <button onclick="showHelp()" style="background:none; border:none; font-size:25px; cursor:pointer;">❓</button>
+
+        <style>
         :root {
             --bg: #000; --card: #111; --text: #fff; --accent: #d4af37;
             --gold-gradient: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
@@ -21,6 +23,19 @@
             font-family: 'Segoe UI', Tahoma, sans-serif;
             background-color: var(--bg); color: var(--text);
             padding: 15px; margin: 0; text-align: center; transition: 0.5s;
+     <div id="helpModal" class="no-print" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:20000; align-items:center; justify-content:center;">
+    <div class="glass-card" style="width:85%; max-height:80%; overflow-y:auto; border-color:var(--accent);">
+        <h2 style="color:var(--accent)">طريقة الاستخدام 🚀</h2>
+        <ul style="text-align:right; line-height:1.8; font-size:14px;">
+            <li>🔑 <b>الدخول:</b> الباسورد الافتراضي هو <code style="color:var(--accent)">1234</code>.</li>
+            <li>🎙️ <b>المايك الذكي:</b> دوس على المايك وقول "صرفت 50 جنيه" أو "جالي 100 جنيه"، البرنامج هيفهمك لوحده.</li>
+            <li>📝 <b>تعديل/حذف:</b> أي عملية تقدر تعدلها من علامة القلم أو تمسحها من علامة (✕).</li>
+            <li>⚙️ <b>الإعدادات:</b> تقدر تغير اللغة، الثيم، أو كود القفل من علامة الترس.</li>
+            <li>🖨️ <b>التقارير:</b> زرار البرنتر بيعملك تقرير رسمي جاهز للطباعة أو الحفظ PDF.</li>
+        </ul>
+        <button class="btn-gold" onclick="closeHelp()">فهمت، ابدأ الآن!</button>
+    </div>
+</div>
         }
 
         .glass-card {
@@ -265,6 +280,31 @@
                 addBtn: "Save Transaction", descPh: "Description", amtPh: "Amount",
                 incWords: ["got", "received", "earned", "income", "gift"],
                 expWords: ["spent", "paid", "bought", "lost"]
+         
+            // وظائف المساعدة
+function showHelp() { document.getElementById('helpModal').style.display = 'flex'; }
+function closeHelp() { 
+    document.getElementById('helpModal').style.display = 'none'; 
+    localStorage.setItem('rahim_saw_help', 'true'); // عشان ما تظهرش تاني لوحدها
+}
+
+// تثبيت الجولد عند أول فتح
+window.onload = () => {
+    // التأكد إن الثيم الأساسي جولد لو مفيش ثيم متسيف
+    if (!localStorage.getItem('rahim_final_theme')) {
+        currentTheme = 'theme-gold';
+        document.body.className = 'theme-gold';
+    } else {
+        document.body.className = currentTheme;
+    }
+    
+    // إظهار المساعدة تلقائياً أول مرة بس
+    if (!localStorage.getItem('rahim_saw_help')) {
+        showHelp();
+    }
+    
+    applyLanguage(); // تحديث اللغة
+};
             }
         };
 
